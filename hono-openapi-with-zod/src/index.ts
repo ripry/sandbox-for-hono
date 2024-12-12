@@ -6,12 +6,14 @@ import { resolver, validator } from 'hono-openapi/zod'
 import { prettyJSON } from 'hono/pretty-json'
 import { z } from 'zod'
 
+import 'zod-openapi/extend'
+
 const app = new Hono()
 
 const querySchema = z.object({
-  name: z.string().optional(),
+  name: z.string().optional().openapi({ description: 'Name of the user' }),
 })
-const responseSchema = z.string()
+const responseSchema = z.string().openapi({ description: 'Greeting message' })
 
 app.get(
   '/',
