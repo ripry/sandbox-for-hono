@@ -1,7 +1,8 @@
 import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
-import { describeRoute } from 'hono-openapi'
+import { describeRoute, openAPISpecs } from 'hono-openapi'
 import { resolver, validator } from 'hono-openapi/zod'
+import { prettyJSON } from 'hono/pretty-json'
 import { z } from 'zod'
 
 const app = new Hono()
@@ -29,6 +30,17 @@ app.get(
     const { name } = c.req.valid('query')
     return c.text(`Hello ${name ?? 'Hono'}!`)
   },
+)
+
+app.get(
+  '/openapi.json',
+  openAPISpecs(app, {
+    documentation: {
+      info: { title: 'Hono API', version: '1.0.0', description: 'Greeting API' },
+      servers: [{ url: 'http://localhost:3000', description: 'Local Server' }],
+    },
+  }),
+  prettyJSON(),
 )
 
 const port = 3000
