@@ -1,4 +1,5 @@
 import { serve } from '@hono/node-server'
+import { apiReference } from '@scalar/hono-api-reference'
 import { Hono } from 'hono'
 import { describeRoute, openAPISpecs } from 'hono-openapi'
 import { resolver, validator } from 'hono-openapi/zod'
@@ -41,6 +42,14 @@ app.get(
     },
   }),
   prettyJSON(),
+)
+
+app.get(
+  '/docs',
+  apiReference({
+    theme: 'saturn',
+    spec: { url: '/openapi.json' },
+  }),
 )
 
 const port = 3000
